@@ -14,8 +14,8 @@ typedef struct {
 typedef struct {
     int right;
     int left;
-    step *stepQueue;
     int size;
+    step *stepQueue;
 } queue;
 typedef struct {
     char *bludiste;
