@@ -50,6 +50,7 @@ int makeStep(blud *maze, queue* stack) {
     }
     stack->left = stack->right + 1;
     stack->right = r;
+    free(steps);
     return -1;
 }
 
