@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bludiste.h"
+#define ROUTE 'X'
 
 blud storeBlud(void);
 int kroky(blud);
@@ -10,6 +11,8 @@ bod storeStep(int x, int y);
 bod *noWalls(blud *maze, bod *steps);
 int makeStep(blud *maze, queue* stack);
 int solve(blud maze);
+bod *findRoute(queue *stack);
+int drawRoute(int length, blud *maze, bod *route);
 
 int main() {
     blud maze = storeBlud();
@@ -28,6 +31,8 @@ int solve(blud maze) {
    int count;
    while ((count = makeStep(&maze, &stack)) == -1);
    printf("%d\n",count);
+   drawRoute(stack.stepQueue[count].depth, &maze, findRoute(&stack));
+   printBlud(maze);
 }
 
 int makeStep(blud *maze, queue* stack) {
@@ -39,12 +44,17 @@ int makeStep(blud *maze, queue* stack) {
             if (steps[j].x == -1) continue;
             else {
                 r++;
-                if (r >= stack->size) stack->stepQueue = realloc(stack->stepQueue, stack->size* 2 * sizeof(step));
+                if (r >= stack->size) stack->stepQueue = realloc(stack->stepQueue, stack->size * 2 * sizeof(step));
                 stack->stepQueue[r].where.x = steps[j].x;
                 stack->stepQueue[r].where.y = steps[j].y;
-                stack->stepQueue[r].depth = stack->stepQueue[stack->left].depth ? stack->stepQueue[stack->left - 1].depth + 1 : 1;
+                stack->stepQueue[r].depth = stack->stepQueue[stack->left].depth ? stack->stepQueue[stack->left].depth + 1 : 1;
                 stack->stepQueue[r].parent = i;
-                if (steps[j].x == (maze->x - 1) && steps[j].y == (maze-> y - 1)) return r;
+                if (steps[j].x == (maze->x - 1) && steps[j].y == (maze-> y - 1)){
+                    stack->left = stack->right + 1;
+                    stack->right = r;
+                    free(steps);
+                    return r;
+                }
             }
         }
     }
@@ -52,6 +62,27 @@ int makeStep(blud *maze, queue* stack) {
     stack->right = r;
     free(steps);
     return -1;
+}
+
+bod *findRoute(queue *stack) {
+    int r = stack->right;
+    int d = stack->stepQueue[r].depth + 1;
+    int i = d - 1;
+    bod *steps = malloc(d * sizeof(bod));
+    for (; i >= 0; i--) {
+        steps[i] = storeStep(stack->stepQueue[r].where.x, stack->stepQueue[r].where.y);    
+        r = stack->stepQueue[r].parent;
+    }
+    return steps;
+}
+
+int drawRoute(int length, blud *maze, bod *route) {
+    int i;
+    for (i = 0; i <= length; i++) {
+        maze->bludiste[route[i].x * maze->x + route[i].y] = ROUTE;    
+    }
+    free(route);
+    return length + 1; 
 }
 
 blud storeBlud() {
@@ -94,7 +125,7 @@ bod *noWalls(blud *maze, bod *steps) {
             (steps + i)->y = -1;
             continue;
         }
-        if (*(maze->bludiste + steps[i].y * maze->y + steps[i].x) == WALL) {
+        if (*(maze->bludiste + steps[i].y + steps[i].x * maze->x) == WALL) {
             (steps + i)->x = -1;
             (steps + i)->y = -1;
         }
