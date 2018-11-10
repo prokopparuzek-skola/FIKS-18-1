@@ -44,7 +44,10 @@ int makeStep(blud *maze, queue* stack) {
             if (steps[j].x == -1) continue;
             else {
                 r++;
-                if (r >= stack->size) stack->stepQueue = realloc(stack->stepQueue, stack->size * 2 * sizeof(step));
+                if (r >= stack->size){
+                    stack->stepQueue = realloc(stack->stepQueue, stack->size * 2 * sizeof(step));
+                    stack->size *= 2;
+                }
                 stack->stepQueue[r].where.x = steps[j].x;
                 stack->stepQueue[r].where.y = steps[j].y;
                 stack->stepQueue[r].depth = stack->stepQueue[stack->left].depth ? stack->stepQueue[stack->left].depth + 1 : 1;
@@ -70,7 +73,7 @@ bod *findRoute(queue *stack) {
     int i = d - 1;
     bod *steps = malloc(d * sizeof(bod));
     for (; i >= 0; i--) {
-        steps[i] = storeStep(stack->stepQueue[r].where.x, stack->stepQueue[r].where.y);    
+        steps[i] = storeStep(stack->stepQueue[r].where.x, stack->stepQueue[r].where.y);
         r = stack->stepQueue[r].parent;
     }
     return steps;
@@ -79,10 +82,10 @@ bod *findRoute(queue *stack) {
 int drawRoute(int length, blud *maze, bod *route) {
     int i;
     for (i = 0; i <= length; i++) {
-        maze->bludiste[route[i].x * maze->x + route[i].y] = ROUTE;    
+        maze->bludiste[route[i].x * maze->x + route[i].y] = ROUTE;
     }
     free(route);
-    return length + 1; 
+    return length + 1;
 }
 
 blud storeBlud() {
