@@ -3,6 +3,7 @@
 #define WALL '#'
 #define CORIDOR '.'
 #define ROUTE 'X'
+
 typedef struct {
     int x;
     int y;
