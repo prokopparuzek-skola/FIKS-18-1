@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bludiste.h"
-#define ROUTE 'X'
 
 blud storeBlud(void);
 int kroky(blud);
@@ -13,11 +12,15 @@ int makeStep(blud *maze, queue* stack);
 int solve(blud maze);
 bod *findRoute(queue *stack);
 int drawRoute(int length, blud *maze, bod *route);
+bod *outOfMaze(blud *maze, bod *steps);
+bod *noBack(bod back, bod *steps);
+int printQueue(queue *stack);
 
 int main() {
     blud maze = storeBlud();
     printBlud(maze);
     solve(maze);
+    free(maze.bludiste);
 }
 
 int solve(blud maze) {
@@ -30,7 +33,8 @@ int solve(blud maze) {
    stack.stepQueue[0].parent = 0;
    int count;
    while ((count = makeStep(&maze, &stack)) == -1);
-   printf("%d\n",count);
+  // printQueue(&stack);
+   printf("%d\n%d\n",count, stack.stepQueue[stack.right].depth + 1);
    drawRoute(stack.stepQueue[count].depth, &maze, findRoute(&stack));
    printBlud(maze);
 }
@@ -40,6 +44,8 @@ int makeStep(blud *maze, queue* stack) {
     bod *steps;
     for (i = stack->left; i <= stack->right; i++) {
         steps = noWalls(maze, availableSteps(stack->stepQueue[i].where));
+        steps = outOfMaze(maze, steps);
+        steps = noBack(stack->stepQueue[stack->stepQueue[i].parent].where, steps);
         for (j = 0; j < 4; j++) {
             if (steps[j].x == -1) continue;
             else {
@@ -67,6 +73,13 @@ int makeStep(blud *maze, queue* stack) {
     return -1;
 }
 
+int printQueue(queue *stack) {
+    int i;
+    for (i = 0; i <= stack->right; i++) {
+        printf("%d %d %d %d\n", i, stack->stepQueue[i].parent, stack->stepQueue[i].where.x, stack->stepQueue[i].where.y);
+    }
+}
+
 bod *findRoute(queue *stack) {
     int r = stack->right;
     int d = stack->stepQueue[r].depth + 1;
@@ -82,7 +95,7 @@ bod *findRoute(queue *stack) {
 int drawRoute(int length, blud *maze, bod *route) {
     int i;
     for (i = 0; i <= length; i++) {
-        maze->bludiste[route[i].x * maze->x + route[i].y] = ROUTE;
+        maze->bludiste[route[i].x + route[i].y * maze->x] = ROUTE;
     }
     free(route);
     return length + 1;
@@ -91,11 +104,11 @@ int drawRoute(int length, blud *maze, bod *route) {
 blud storeBlud() {
     int i, j;
     blud maze = {NULL, 0, 0};
-    scanf("%d %d\n", &maze.x, &maze.y);
+    scanf("%d %d\n", &maze.y, &maze.x);
     maze.bludiste = malloc(maze.x * maze.y);
     for (i = 0; i < maze.y; i++) {
         for (j = 0; j < maze.x; j++) {
-            scanf(" %c", maze.bludiste + (i * maze.y + j));
+            scanf(" %c", (maze.bludiste + (i * maze.x + j)));
         }
     }
     return maze;
@@ -105,7 +118,7 @@ void printBlud(blud maze) {
     int i, j;
     for (i = 0; i < maze.y; i++) {
         for (j = 0; j < maze.x; j++) {
-            putchar(*(maze.bludiste + (i * maze.y + j)));
+            putchar(*(maze.bludiste + (i * maze.x + j)));
         }
         putchar('\n');
     }
@@ -123,12 +136,29 @@ bod *availableSteps(bod where) {
 bod *noWalls(blud *maze, bod *steps) {
     int i;
     for (i = 0; i < 4; i++) {
+        if (maze->bludiste[steps[i].x + steps[i].y * maze->x] == WALL) {
+            (steps + i)->x = -1;
+            (steps + i)->y = -1;
+        }
+    }
+    return steps;
+}
+
+bod *outOfMaze(blud *maze, bod *steps) {
+    int i;
+    for (i = 0; i < 4; i++) {
         if (steps[i].x < 0 || steps[i].y < 0 || steps[i].x >= maze->x || steps[i].y >= maze-> y) {
             (steps + i)->x = -1;
             (steps + i)->y = -1;
-            continue;
         }
-        if (*(maze->bludiste + steps[i].y + steps[i].x * maze->x) == WALL) {
+    }
+    return steps;
+}
+
+bod *noBack(bod back, bod *steps) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        if ((steps[i].x == back.x) && (steps[i].y == back.y)) {
             (steps + i)->x = -1;
             (steps + i)->y = -1;
         }
