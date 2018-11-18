@@ -32,7 +32,7 @@ int solve(blud maze) {
    stack.stepQueue[0].where.y = 0;
    stack.stepQueue[0].depth = 0;
    stack.stepQueue[0].parent = 0;
-   memset(stack.back, 0, 9546);
+   stack.back = calloc(9647, sizeof(char));
    int count;
    while ((count = makeStep(&maze, &stack)) == -1);
   // printQueue(&stack);
