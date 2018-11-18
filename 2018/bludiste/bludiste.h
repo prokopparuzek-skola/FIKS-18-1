@@ -18,6 +18,7 @@ typedef struct {
     int left;
     int size;
     step *stepQueue;
+    char back[9546];
 } queue;
 typedef struct {
     char *bludiste;

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "bludiste.h"
 
 blud storeBlud(void);
@@ -13,8 +14,8 @@ int solve(blud maze);
 bod *findRoute(queue *stack);
 int drawRoute(int length, blud *maze, bod *route);
 bod *outOfMaze(blud *maze, bod *steps);
-bod *noBack(bod back, bod *steps);
 int printQueue(queue *stack);
+int notSame(queue *stack, int last);
 
 int main() {
     blud maze = storeBlud();
@@ -31,6 +32,7 @@ int solve(blud maze) {
    stack.stepQueue[0].where.y = 0;
    stack.stepQueue[0].depth = 0;
    stack.stepQueue[0].parent = 0;
+   memset(stack.back, 0, 9546);
    int count;
    while ((count = makeStep(&maze, &stack)) == -1);
   // printQueue(&stack);
@@ -40,14 +42,14 @@ int solve(blud maze) {
 }
 
 int makeStep(blud *maze, queue* stack) {
-    int i, j, r = stack->right;
+    int i, j, r = stack->right, b;
     bod *steps;
     for (i = stack->left; i <= stack->right; i++) {
         steps = noWalls(maze, availableSteps(stack->stepQueue[i].where));
         steps = outOfMaze(maze, steps);
-        steps = noBack(stack->stepQueue[stack->stepQueue[i].parent].where, steps);
         for (j = 0; j < 4; j++) {
             if (steps[j].x == -1) continue;
+            else if (!notSame(stack, r + 1)) continue;
             else {
                 r++;
                 if (r >= stack->size){
@@ -58,6 +60,10 @@ int makeStep(blud *maze, queue* stack) {
                 stack->stepQueue[r].where.y = steps[j].y;
                 stack->stepQueue[r].depth = stack->stepQueue[stack->left].depth ? stack->stepQueue[stack->left].depth + 1 : 1;
                 stack->stepQueue[r].parent = i;
+                b = steps[j].x;
+                b <<= 7;
+                b |= steps[j].y;
+                stack->back[b] = 1;
                 if (steps[j].x == (maze->x - 1) && steps[j].y == (maze-> y - 1)){
                     stack->left = stack->right + 1;
                     stack->right = r;
@@ -155,20 +161,18 @@ bod *outOfMaze(blud *maze, bod *steps) {
     return steps;
 }
 
-bod *noBack(bod back, bod *steps) {
-    int i;
-    for (i = 0; i < 4; i++) {
-        if ((steps[i].x == back.x) && (steps[i].y == back.y)) {
-            (steps + i)->x = -1;
-            (steps + i)->y = -1;
-        }
-    }
-    return steps;
-}
-
 bod storeStep(int x, int y) {
     bod s;
     s.x = x;
     s.y = y;
     return s;
+}
+
+int notSame(queue *stack, int last) {
+    int b;
+    b = stack->stepQueue[last].where.x;
+    b <<= 7;
+    b |= stack->stepQueue[last].where.y;
+    if (stack->back[b] == 1) return 0;
+    else return 1;
 }
