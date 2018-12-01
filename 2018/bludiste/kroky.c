@@ -42,7 +42,7 @@ int solve(blud maze) {
 }
 
 int makeStep(blud *maze, queue* stack) {
-    int i, j, r = stack->right, b;
+    unsigned int i, j, r = stack->right, b;
     bod *steps;
     for (i = stack->left; i <= stack->right; i++) {
         steps = noWalls(maze, availableSteps(stack->stepQueue[i].where));
@@ -169,7 +169,7 @@ bod storeStep(int x, int y) {
 }
 
 int notSame(queue *stack, int last) {
-    int b;
+    unsigned int b;
     b = stack->stepQueue[last].where.x;
     b <<= 7;
     b |= stack->stepQueue[last].where.y;
