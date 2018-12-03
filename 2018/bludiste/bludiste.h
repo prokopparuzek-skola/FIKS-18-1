@@ -11,23 +11,26 @@ typedef struct {
 } bod;
 
 typedef struct {
-    bod where;
     int depth;
     int parent;
 } step;
 
 typedef struct {
-    int right;
-    int left;
-    int size;
-    step *stepQueue;
-    char *back;
-} queue;
+    int size_x;
+    int size_y;
+    step *buff;
+} buffer_t;
 
 typedef struct {
     char *bludiste;
-    int x;
-    int y;
+    int size_x;
+    int size_y;
 } blud;
 
+blud storeBlud(void);
+void printBlud(blud);
+bod storeStep(int x, int y);
+int solve(blud *maze);
+void initBuff(buffer_t *buff);
+void makeStep(buffer_t *queue);
 #endif /* __BLUDISTE */
