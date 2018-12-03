@@ -19,23 +19,29 @@ int notSame(queue *stack, int last);
 
 int main() {
     blud maze = storeBlud();
+
     printBlud(maze);
     solve(maze);
     free(maze.bludiste);
+
+    return 0;
 }
 
 int solve(blud maze) {
    int sizeQ = 128;
    queue stack = {0, 0, sizeQ, NULL};
+
    stack.stepQueue = calloc(sizeQ, sizeof(step));
    stack.stepQueue[0].where.x = 0;
    stack.stepQueue[0].where.y = 0;
    stack.stepQueue[0].depth = 0;
    stack.stepQueue[0].parent = 0;
    stack.back = calloc(9647, sizeof(char));
+
    int count;
    while ((count = makeStep(&maze, &stack)) == -1);
-  // printQueue(&stack);
+
+   // printQueue(&stack);
    printf("%d\n%d\n",count, stack.stepQueue[stack.right].depth + 1);
    drawRoute(stack.stepQueue[count].depth, &maze, findRoute(&stack));
    printBlud(maze);
@@ -44,15 +50,17 @@ int solve(blud maze) {
 int makeStep(blud *maze, queue* stack) {
     unsigned int i, j, r = stack->right, b;
     bod *steps;
+
     for (i = stack->left; i <= stack->right; i++) {
         steps = noWalls(maze, availableSteps(stack->stepQueue[i].where));
         steps = outOfMaze(maze, steps);
+
         for (j = 0; j < 4; j++) {
             if (steps[j].x == -1) continue;
             else if (!notSame(stack, r + 1)) continue;
             else {
                 r++;
-                if (r >= stack->size){
+                if (r >= stack->size) {
                     stack->stepQueue = realloc(stack->stepQueue, stack->size * 2 * sizeof(step));
                     stack->size *= 2;
                 }
@@ -73,14 +81,17 @@ int makeStep(blud *maze, queue* stack) {
             }
         }
     }
+
     stack->left = stack->right + 1;
     stack->right = r;
     free(steps);
+
     return -1;
 }
 
 int printQueue(queue *stack) {
     int i;
+
     for (i = 0; i <= stack->right; i++) {
         printf("%d %d %d %d\n", i, stack->stepQueue[i].parent, stack->stepQueue[i].where.x, stack->stepQueue[i].where.y);
     }
@@ -107,21 +118,25 @@ int drawRoute(int length, blud *maze, bod *route) {
     return length + 1;
 }
 
-blud storeBlud() {
+blud storeBlud(void) {
     int i, j;
     blud maze = {NULL, 0, 0};
+
     scanf("%d %d\n", &maze.y, &maze.x);
     maze.bludiste = malloc(maze.x * maze.y);
+
     for (i = 0; i < maze.y; i++) {
         for (j = 0; j < maze.x; j++) {
             scanf(" %c", (maze.bludiste + (i * maze.x + j)));
         }
     }
+
     return maze;
 }
 
 void printBlud(blud maze) {
     int i, j;
+
     for (i = 0; i < maze.y; i++) {
         for (j = 0; j < maze.x; j++) {
             putchar(*(maze.bludiste + (i * maze.x + j)));

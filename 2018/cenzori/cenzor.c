@@ -8,7 +8,7 @@ void spocti(unsigned int *ID, unsigned int B, unsigned int E);
     scanf("%d", &T);
     for (; T > 0; T--) {
         scanf("%d %d", &N, &Q);
-        unsigned int *ID = malloc(sizeof(int) * N);
+        unsigned int *ID = malloc(sizeof(unsigned int) * N);
         for (i = 0; i < N; i++) {
             scanf("%u",ID + i);
         }
