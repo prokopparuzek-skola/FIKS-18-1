@@ -4,11 +4,12 @@
 #include "bludiste.h"
 
 int solve(blud *maze) {
-    buffer_t queue = {maze->size_x, maze->size_y, NULL, NULL, NULL};
+    buffer_t queue = {maze->size_x, maze->size_y, 0, 0, NULL, NULL, NULL};
     queue.buff = malloc(sizeof(step) * maze->size_x * maze->size_y);
     queue.stackAc = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
+    queue.stackFu = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
 
-    if (queue.buff == NULL || queue.stackAc == NULL) {
+    if (queue.buff == NULL || queue.stackAc == NULL || queue.stackFu == NULL) {
         puts("Málo paměti");
         exit(1);
     }
@@ -16,12 +17,14 @@ int solve(blud *maze) {
     initStack(&queue);
     queue.stackAc[0] = 0;
 
-    while (queue.buff[(queue.size_x - 1) * (queue.size_y - 1)].depth == -1) {
-        makeStep(&queue);
+    while (queue.buff[(queue.size_x * queue.size_y) - 1].depth == -1) {
+        makeStep(&queue, maze);
     }
     printBlud(maze);
+
     free(queue.buff);
     free(queue.stackAc);
+    free(queue.stackFu);
 
     return queue.buff[(queue.size_x - 1) * (queue.size_y - 1)].depth + 1;
 }
@@ -46,21 +49,44 @@ void initStack (buffer_t *buff) {
     }
 }
 
-void makeStep(buffer_t *queue) {
+void makeSteps(buffer_t *queue, blud *maze) {
+    int i;
 
+    for (i = 0; i <= queue->indexAc; i++) {
+        solveStep(queue, maze, i);
+    }
+}
+
+void solveStep(buffer_t *queue, blud *maze, int index) {
+    int steps[4] = {0, 0, 0, 0};
+    int i;
+
+    steps[0] = queue->stackAc[index] - queue->size_x;
+    steps[1] = queue->stackAc[index] + 1;
+    steps[2] = queue->stackAc[index] + queue->size_x;
+    steps[3] = queue->stackAc[index] - 1;
+    for (i = 0; i < 4; i++) {
+        if (steps[i] < 0 || steps[i] >= queue->size_x * queue->size_y){ //Kontrola mezí pole
+            DISCARD;
+        }
+        if (maze->bludiste[i] == WALL) { // Kontrola zdí
+            DISCARD;
+        }
+        if ((queue->buff[queue->stackAc[index]].depth + 1) >= queue->buff[steps[i]].depth && queue->buff[steps[i]].depth != -1) { // Už jsem tam byl
+            DISCARD;
+        }
+    }
 }
 
 blud storeBlud(void) {
-    int i, j;
+    int i;
     blud maze = {NULL, 0, 0};
 
     scanf("%d %d\n", &maze.size_y, &maze.size_x);
     maze.bludiste = malloc(maze.size_x * maze.size_y);
 
-    for (i = 0; i < maze.size_y; i++) {
-        for (j = 0; j < maze.size_x; j++) {
-            scanf(" %c", (maze.bludiste + (i * maze.size_x + j)));
-        }
+    for (i = 0; i < maze.size_y * maze.size_x; i++) {
+        scanf(" %c", &maze.bludiste[i]);
     }
 
     return maze;
@@ -82,6 +108,7 @@ int main() {
 
     printBlud(&maze);
     solve(&maze);
+
     free(maze.bludiste);
 
     return 0;
