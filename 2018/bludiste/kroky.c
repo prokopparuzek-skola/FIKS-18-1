@@ -4,25 +4,24 @@
 #include "bludiste.h"
 
 int solve(blud *maze) {
-    buffer_t queue = {maze->size_x, maze->size_y, NULL, NULL};
+    buffer_t queue = {maze->size_x, maze->size_y, NULL, NULL, NULL};
     queue.buff = malloc(sizeof(step) * maze->size_x * maze->size_y);
-    queue.stack = malloc(sizeof(bod) * maze->size_x * maze->size_y);
+    queue.stackAc = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
 
-    if (queue.buff == NULL || queue.stack == NULL) {
+    if (queue.buff == NULL || queue.stackAc == NULL) {
         puts("Málo paměti");
         exit(1);
     }
     initBuff(&queue);
     initStack(&queue);
-    queue.stack[0].x = 0;
-    queue.stack[0].y = 0;
+    queue.stackAc[0] = 0;
 
     while (queue.buff[(queue.size_x - 1) * (queue.size_y - 1)].depth == -1) {
         makeStep(&queue);
     }
     printBlud(maze);
     free(queue.buff);
-    free(queue.stack);
+    free(queue.stackAc);
 
     return queue.buff[(queue.size_x - 1) * (queue.size_y - 1)].depth + 1;
 }
@@ -42,8 +41,8 @@ void initStack (buffer_t *buff) {
     int i;
 
     for (i = 0; i < buff->size_x * buff->size_y; i++) {
-        buff->stack[i].x = -1;
-        buff->stack[i].y = -1;
+        buff->stackAc[i] = -1;
+        buff->stackFu[i] = -1;
     }
 }
 

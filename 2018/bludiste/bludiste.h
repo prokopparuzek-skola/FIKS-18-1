@@ -6,11 +6,6 @@
 #define ROUTE 'X'
 
 typedef struct {
-    int x;
-    int y;
-} bod;
-
-typedef struct {
     int depth;
     int parent;
 } step;
@@ -19,7 +14,8 @@ typedef struct {
     int size_x;
     int size_y;
     step *buff;
-    bod *stack;
+    unsigned *stackAc;
+    unsigned *stackFu;
 } buffer_t;
 
 typedef struct {
@@ -30,9 +26,8 @@ typedef struct {
 
 blud storeBlud(void);
 void printBlud(blud*);
-bod storeStep(int x, int y);
 int solve(blud *maze);
 void initBuff(buffer_t *buff);
 void makeStep(buffer_t *queue);
-void initStack (buffer_t *buff) {
+void initStack (buffer_t *buff);
 #endif /* __BLUDISTE */
