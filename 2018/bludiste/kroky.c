@@ -14,7 +14,6 @@ int solve(blud *maze) {
         exit(1);
     }
     initBuff(&queue);
-    initStack(&queue);
     queue.stackAc[0] = 0;
 
     while (queue.buff[(queue.size_x * queue.size_y) - 1].depth == -1) {
@@ -43,23 +42,6 @@ void initBuff(buffer_t *buff) {
     buff->buff[0].parent = 0;
 }
 
-void initStack (buffer_t *buff) {
-    int i;
-
-    for (i = 0; i < buff->size_x * buff->size_y; i++) {
-        buff->stackAc[i] = -1;
-        buff->stackFu[i] = -1;
-    }
-}
-
-void initStackFu (buffer_t *buff) {
-    int i;
-
-    for (i = 0; i < buff->size_x * buff->size_y; i++) {
-        buff->stackFu[i] = -1;
-    }
-}
-
 void makeSteps(buffer_t *queue, blud *maze) {
     int i, *swapS;
 
@@ -69,7 +51,6 @@ void makeSteps(buffer_t *queue, blud *maze) {
     swapS = queue->stackAc;
     queue->stackAc = queue->stackFu;
     queue->stackFu = swapS;
-    initStackFu(queue);
     queue->indexAc = queue->indexFu;
     queue->indexFu = -1;
 }
