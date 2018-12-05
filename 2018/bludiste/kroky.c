@@ -5,6 +5,8 @@
 
 int solve(blud *maze) {
     buffer_t queue = {maze->size_x, maze->size_y, 0, -1, NULL, NULL, NULL}; // indexFu je -1, před 1. použitím se zvětší
+    unsigned count; // kolik kroků
+
     queue.buff = malloc(sizeof(step) * maze->size_x * maze->size_y);
     queue.stackAc = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
     queue.stackFu = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
@@ -19,8 +21,9 @@ int solve(blud *maze) {
     while (queue.buff[(queue.size_x * queue.size_y) - 1].depth == -1) {
         makeSteps(&queue, maze);
     }
-    findRoute(&queue, maze);
+    count = findRoute(&queue, maze);
     printBlud(maze);
+    printf("%d\n", count);
 
     free(queue.buff);
     free(queue.stackAc);
@@ -91,7 +94,7 @@ void solveStep(buffer_t *queue, blud *maze, int index) {
     }
 }
 
-void findRoute(buffer_t *queue, blud *maze) {
+unsigned findRoute(buffer_t *queue, blud *maze) {
     int position = queue->size_x * queue->size_y - 1;
 
     //printf("%d\n", queue->buff[position].depth);
@@ -100,6 +103,8 @@ void findRoute(buffer_t *queue, blud *maze) {
         position = queue->buff[position].parent;
     }
     maze->bludiste[position] = ROUTE;
+
+    return queue->buff[queue->size_x * queue->size_y - 1].depth + 1;
 }
 
 blud storeBlud(void) {

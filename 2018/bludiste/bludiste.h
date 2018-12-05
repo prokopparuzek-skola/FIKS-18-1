@@ -34,5 +34,5 @@ int solve(blud *maze);
 void initBuff(buffer_t *buff);
 void makeSteps(buffer_t *queue, blud*);
 void solveStep(buffer_t *queue, blud *maze, int index);
-void findRoute(buffer_t *queue, blud *maze);
+unsigned findRoute(buffer_t *queue, blud *maze);
 #endif /* __BLUDISTE */
