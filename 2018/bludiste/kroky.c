@@ -4,7 +4,7 @@
 #include "bludiste.h"
 
 int solve(blud *maze) {
-    buffer_t queue = {maze->size_x, maze->size_y, 0, 0, NULL, NULL, NULL};
+    buffer_t queue = {maze->size_x, maze->size_y, 0, -1, NULL, NULL, NULL}; // indexFu je -1, před 1. použitím se zvětší
     queue.buff = malloc(sizeof(step) * maze->size_x * maze->size_y);
     queue.stackAc = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
     queue.stackFu = malloc(sizeof(unsigned) * maze->size_x * maze->size_y);
@@ -38,6 +38,8 @@ void initBuff(buffer_t *buff) {
             buff->buff[i * buff->size_x + j].parent = -1;
         }
     }
+    buff->buff[0].depth = 0;
+    buff->buff[0].parent = 0;
 }
 
 void initStack (buffer_t *buff) {
@@ -58,15 +60,17 @@ void initStackFu (buffer_t *buff) {
 }
 
 void makeSteps(buffer_t *queue, blud *maze) {
-    int i, *swap;
+    int i, *swapS;
 
     for (i = 0; i <= queue->indexAc; i++) {
         solveStep(queue, maze, i);
     }
-    swap = queue->stackAc;
+    swapS = queue->stackAc;
     queue->stackAc = queue->stackFu;
-    queue->stackAc = swap;
+    queue->stackFu = swapS;
     initStackFu(queue);
+    queue->indexAc = queue->indexFu;
+    queue->indexFu = -1;
 }
 
 void solveStep(buffer_t *queue, blud *maze, int index) {

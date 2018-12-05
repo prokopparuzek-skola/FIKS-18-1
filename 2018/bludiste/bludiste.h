@@ -5,7 +5,7 @@
 #define CORIDOR '.'
 #define ROUTE 'X'
 
-#define DISCARD steps[i] = -1
+#define DISCARD steps[i] = -1; continue
 
 typedef struct {
     int depth;
