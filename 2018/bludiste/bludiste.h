@@ -32,7 +32,7 @@ blud storeBlud(void);
 void printBlud(blud*);
 int solve(blud *maze);
 void initBuff(buffer_t *buff);
-void makeStep(buffer_t *queue, blud*);
+void makeSteps(buffer_t *queue, blud*);
 void initStack (buffer_t *buff);
 void solveStep(buffer_t *queue, blud *maze, int index);
 void initStackFu (buffer_t *buff);

@@ -18,7 +18,7 @@ int solve(blud *maze) {
     queue.stackAc[0] = 0;
 
     while (queue.buff[(queue.size_x * queue.size_y) - 1].depth == -1) {
-        makeStep(&queue, maze);
+        makeSteps(&queue, maze);
     }
     printBlud(maze);
 
