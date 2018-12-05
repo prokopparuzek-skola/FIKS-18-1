@@ -35,4 +35,5 @@ void initBuff(buffer_t *buff);
 void makeStep(buffer_t *queue, blud*);
 void initStack (buffer_t *buff);
 void solveStep(buffer_t *queue, blud *maze, int index);
+void initStackFu (buffer_t *buff);
 #endif /* __BLUDISTE */

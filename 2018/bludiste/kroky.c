@@ -49,12 +49,24 @@ void initStack (buffer_t *buff) {
     }
 }
 
-void makeSteps(buffer_t *queue, blud *maze) {
+void initStackFu (buffer_t *buff) {
     int i;
+
+    for (i = 0; i < buff->size_x * buff->size_y; i++) {
+        buff->stackFu[i] = -1;
+    }
+}
+
+void makeSteps(buffer_t *queue, blud *maze) {
+    int i, *swap;
 
     for (i = 0; i <= queue->indexAc; i++) {
         solveStep(queue, maze, i);
     }
+    swap = queue->stackAc;
+    queue->stackAc = queue->stackFu;
+    queue->stackAc = swap;
+    initStackFu(queue);
 }
 
 void solveStep(buffer_t *queue, blud *maze, int index) {
@@ -65,7 +77,7 @@ void solveStep(buffer_t *queue, blud *maze, int index) {
     steps[1] = queue->stackAc[index] + 1;
     steps[2] = queue->stackAc[index] + queue->size_x;
     steps[3] = queue->stackAc[index] - 1;
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) { // Vyhození nepotřebných dat
         if (steps[i] < 0 || steps[i] >= queue->size_x * queue->size_y){ //Kontrola mezí pole
             DISCARD;
         }
@@ -75,6 +87,15 @@ void solveStep(buffer_t *queue, blud *maze, int index) {
         if ((queue->buff[queue->stackAc[index]].depth + 1) >= queue->buff[steps[i]].depth && queue->buff[steps[i]].depth != -1) { // Už jsem tam byl
             DISCARD;
         }
+    }
+    for (i = 0; i < 4; i++) {
+        if (steps[i] == -1) {
+            continue;
+        }
+        queue->indexFu++; // zvyš index příštích budů o 1
+        queue->stackFu[queue->indexFu] = steps[i]; // ulož tam aktuální bod
+        queue->buff[steps[i]].depth = queue->buff[queue->stackAc[index]].depth + 1; // ulož do něj hloubku
+        queue->buff[steps[i]].parent = queue->stackAc[index]; // a rodiče
     }
 }
 
