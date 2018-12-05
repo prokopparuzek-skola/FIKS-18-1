@@ -20,6 +20,7 @@ int solve(blud *maze) {
     while (queue.buff[(queue.size_x * queue.size_y) - 1].depth == -1) {
         makeSteps(&queue, maze);
     }
+    findRoute(&queue, maze);
     printBlud(maze);
 
     free(queue.buff);
@@ -82,10 +83,16 @@ void solveStep(buffer_t *queue, blud *maze, int index) {
     steps[2] = queue->stackAc[index] + queue->size_x;
     steps[3] = queue->stackAc[index] - 1;
     for (i = 0; i < 4; i++) { // Vyhození nepotřebných dat
-        if (steps[i] < 0 || steps[i] >= queue->size_x * queue->size_y){ //Kontrola mezí pole
+        if (steps[i] < 0 || steps[i] >= queue->size_x * queue->size_y){ //Kontrola mezí pole horní a dolní
             DISCARD;
         }
-        if (maze->bludiste[i] == WALL) { // Kontrola zdí
+        if ((steps[i] + 1) % queue->size_x == 0 && i == 3) { // Kontrola bočních stěn přechod zdola
+            DISCARD;
+        }
+        if (steps[i] % queue->size_x == 0 && i == 1) { //Kontrola bočních stěn přechod zhora
+            DISCARD;
+        }
+        if (maze->bludiste[steps[i]] == WALL) { // Kontrola zdí
             DISCARD;
         }
         if ((queue->buff[queue->stackAc[index]].depth + 1) >= queue->buff[steps[i]].depth && queue->buff[steps[i]].depth != -1) { // Už jsem tam byl
@@ -101,6 +108,17 @@ void solveStep(buffer_t *queue, blud *maze, int index) {
         queue->buff[steps[i]].depth = queue->buff[queue->stackAc[index]].depth + 1; // ulož do něj hloubku
         queue->buff[steps[i]].parent = queue->stackAc[index]; // a rodiče
     }
+}
+
+void findRoute(buffer_t *queue, blud *maze) {
+    int position = queue->size_x * queue->size_y - 1;
+
+    //printf("%d\n", queue->buff[position].depth);
+    while (position) {
+        maze->bludiste[position] = ROUTE;
+        position = queue->buff[position].parent;
+    }
+    maze->bludiste[position] = ROUTE;
 }
 
 blud storeBlud(void) {
