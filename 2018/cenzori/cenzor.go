@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func interval(ID []uint, posun int) {
@@ -42,8 +41,8 @@ func main() {
 		}
 		for ; Q > 0; Q-- {
 			fmt.Scanf("%d%d", &B, &E)
-			go interval(ID[B:E+1], int(B))
+			//go interval(ID[B:E+1], int(B))
+			interval(ID[B:E+1], int(B))
 		}
 	}
-	time.Sleep(3 * time.Second)
 }
