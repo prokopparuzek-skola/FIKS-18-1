@@ -1,44 +1,5 @@
-#include<stdio.h>
-
-#define MVR 15 //Měsíce v roce
-#define DVT 9 //Dny v týdnu
-#define PRM 3 //Přestupný měsíc
-#define PRR 3 //Přestupný rok
-#define VPR 100 //Výjimky z přestupného roku
-#define DVR 350 // Dny v roce
-enum {SD = 20, SM = 8, SY = 1984};
-
-#define MVRGK 12
-#define PMGK 2 // Přestupný měsíc gregoriánský kalendář
-#define PRGK 4 // Přestupný rok gregoriánský kalendář
-#define VPRGK 100 // Výjimka z přestupného roku gregoriánský kalendář
-#define VZVPRGK 400 // Výjimka z výjimky přestupného roku gregoriánský kalendář
-#define DVRGK 365 // Dny v roce gregoriánský kalendář
-
-static int DVMGK[] = {31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // Měsíce v roce 1 a poslední je prosinec
-static int DVMVK[] = {-1, 25, 21, 21, 24, 24, 25, 25, 21, 25, 24, 21, 24, 21, 24, 25};
-
-typedef struct {
-    int day;
-    int dayOfWeek;
-    int month;
-    int year;
-} date;
-
-void prepocti(date*);
-int spoctiDny (date* from);
-
-int main() {
-    unsigned int N, i;
-    date from;
-
-    scanf("%u", &N);
-    for (i = 0; i < N; i++) {
-        scanf("%d %d %d", &from.day, &from.month, &from.year);
-        prepocti(&from);
-    }
-    return 0;
-}
+#include <stdio.h>
+#include "cal.h"
 
 void prepocti(date *from) {
     date to = {1, 1, 1, 1};
@@ -48,6 +9,7 @@ void prepocti(date *from) {
 int spoctiDny (date* from) {
     date buff = {from->day - SD, -1, from->month - SM, from->year - SY};
     int years, months, days = 0;
+    char prestupI = (!(from->year % PRGK) && (from->year % VPRGK) || !(from->year % VZVPRGK));
     unsigned i;
 
     for (; buff.year > 0; buff.year--) {
@@ -67,8 +29,23 @@ int spoctiDny (date* from) {
         for (; buff.month < 0; buff.month++) {
             months = buff.month + SM;
             days -= DVMGK[months];
+            if (prestupI && months == PMGK) days--;
         }
     }
     days += buff.day;
+    prestupI = 0;
     return days;
+}
+
+int main() {
+    unsigned int N, i;
+    date from;
+
+    //scanf("%u", &N);
+    //for (i = 0; i < N; i++) {
+    while (1) {
+        scanf("%d %d %d", &from.day, &from.month, &from.year);
+        prepocti(&from);
+    }
+    return 0;
 }
