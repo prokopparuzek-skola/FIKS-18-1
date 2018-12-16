@@ -7,7 +7,7 @@
 #define PRR 3 //Přestupný rok
 #define VPR 100 //Výjimky z přestupného roku
 #define DVR 350 // Dny v roce
-enum {SD = 20, SM = 8, SY = 1984};
+enum {SD = 20, SM = 8, SY = 1984}; // Určuje počáteční datum; SD:den, SM:měsíc, SY:rok
 
 #define MVRGK 12
 #define PMGK 2 // Přestupný měsíc gregoriánský kalendář
@@ -17,9 +17,9 @@ enum {SD = 20, SM = 8, SY = 1984};
 #define DVRGK 365 // Dny v roce gregoriánský kalendář
 
 static int DVMGK[] = {31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // Měsíce v roce 1 a poslední je prosinec
-static int DVMVK[] = {-1, 25, 21, 21, 24, 24, 25, 25, 21, 25, 24, 21, 24, 21, 24, 25};
+static int DVMVK[] = {-1, 25, 21, 21, 24, 24, 25, 25, 21, 25, 24, 21, 24, 21, 24, 25}; // Měsíce v roce, nový kalendář
 
-typedef struct {
+typedef struct { // Uložení datumu
     int day;
     int dayOfWeek;
     int month;
