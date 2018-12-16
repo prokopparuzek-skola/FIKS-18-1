@@ -12,7 +12,7 @@ void prepocti(date *from) {
 }
 
 int spoctiDny (date* from) {
-    date buff = {from->day - SD, 1, from->month - SM, from->year - SY};
+    date buff = {from->day - SD, -1, from->month - SM, from->year - SY};
     int years, months, days = 0;
     char prestupI = ((!(from->year % PRGK) && (from->year % VPRGK)) || !(from->year % VZVPRGK));
 
