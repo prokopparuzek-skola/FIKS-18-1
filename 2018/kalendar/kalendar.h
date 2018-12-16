@@ -1,5 +1,6 @@
 #ifndef __CAL
 #define __CAL
+
 #define MVR 15 //Měsíce v roce
 #define DVT 9 //Dny v týdnu
 #define PRM 3 //Přestupný měsíc
@@ -27,4 +28,5 @@ typedef struct {
 
 void prepocti(date*);
 int spoctiDny (date* from);
+date *spoctiDatum (int days, date* to);
 #endif /* __CAL */
