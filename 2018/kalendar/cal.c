@@ -8,11 +8,11 @@ void prepocti(date *from) {
     days = spoctiDny(from);
     printf("%d\n", days);
     spoctiDatum(days, &to);
-    printf("%d %d %d\n", to.day, to.month, to.year);
+    printf("%d %d %d %d\n",to.dayOfWeek, to.day, to.month, to.year);
 }
 
 int spoctiDny (date* from) {
-    date buff = {from->day - SD, -1, from->month - SM, from->year - SY};
+    date buff = {from->day - SD, 1, from->month - SM, from->year - SY};
     int years, months, days = 0;
     char prestupI = ((!(from->year % PRGK) && (from->year % VPRGK)) || !(from->year % VZVPRGK));
 
@@ -44,10 +44,11 @@ int spoctiDny (date* from) {
 date *spoctiDatum (int days, date* to) {
     char prestupI = 0;
 
+    to->dayOfWeek += days % DVT; // Počítá dny v týdnu
     while (days >= DVR) {
         if (!((to->year) % 3) && ((to->year) % 100) && (days >= (DVR + 1))) {
             to->year++;
-            days -= DVR - 1;
+            days -= (DVR + 1);
             continue;
         }
         else if ((((to->year) % 3) || !((to->year) % 100)) && (days >= DVR)) {
@@ -66,7 +67,7 @@ date *spoctiDatum (int days, date* to) {
                 break;
             }
             else if ((prestupI && to->month == PRM) && days >= (DVMVK[PRM] + 1)) {
-                days -= DVMVK[PRM] - 1;
+                days -= (DVMVK[PRM] + 1);
                 to->month++;
             }
             else {
