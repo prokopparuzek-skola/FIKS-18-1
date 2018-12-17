@@ -1,7 +1,10 @@
+/*
+ * Nefunguje pro data před 20.8. 1984
+ */
 #include <stdio.h>
 #include "kalendar.h"
 
-void prepocti(date *from) {
+void prepocti(date *from) { // Přepočítá datum
     int days;
 
     date to = {1, 1, 1, 1};
