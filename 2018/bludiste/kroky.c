@@ -112,7 +112,7 @@ blud storeBlud(void) {
     blud maze = {0, 0, NULL};
 
     scanf("%d %d\n", &maze.size_y, &maze.size_x);
-    maze.bludiste = malloc(maze.size_x * maze.size_y);
+    maze.bludiste = malloc(sizeof(char) * maze.size_x * maze.size_y);
 
     for (i = 0; i < maze.size_y * maze.size_x; i++) {
         scanf(" %c", &maze.bludiste[i]);
@@ -140,16 +140,23 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
         puts("Nejde to.");
         return;
     }
-    maze.bludiste = malloc(size_x * size_y);
+    maze.bludiste = malloc(sizeof(char) * size_x * size_y);
     if (maze.bludiste == NULL) {
         puts("Málo paměti");
         exit(1);
     }
-    for (i = 0; i < size_x * size_y; i++) {
+//    if (size_y <= 5) { // swap
+//        maze.size_x = maze.size_x + maze.size_y;
+//        maze.size_y = maze.size_x - maze.size_y;
+//        maze.size_x = maze.size_x - maze.size_y;
+//    }
+    for (i = 0; i < maze.size_x * maze.size_y; i++) {
         maze.bludiste[i] = CORIDOR;
     }
-    for (i = 0; i < (size_x - 1); i++) {
-        maze.bludiste[i + size_x] = WALL;
+    if (maze.size_y > 1) {
+        for (i = 0; i < (maze.size_x - 1); i++) {
+            maze.bludiste[i + maze.size_x] = WALL;
+        }
     }
     while (1) {
         ALenght = solve(&maze);
