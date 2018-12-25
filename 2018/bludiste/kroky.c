@@ -109,7 +109,7 @@ unsigned findRoute(buffer_t *queue, blud *maze) {
 
 blud storeBlud(void) {
     int i;
-    blud maze = {NULL, 0, 0};
+    blud maze = {0, 0, NULL};
 
     scanf("%d %d\n", &maze.size_y, &maze.size_x);
     maze.bludiste = malloc(maze.size_x * maze.size_y);
@@ -132,13 +132,32 @@ void printBlud(blud *maze) {
     }
 }
 
+void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
+    unsigned i;
+    blud maze = {size_x, size_y, NULL};
+
+    maze.bludiste = malloc(size_x * size_y);
+    if (maze.bludiste == NULL) {
+        puts("Málo paměti");
+        exit(1);
+    }
+    for (i = 0; i < size_x * size_y; i++) {
+        maze.bludiste[i] = CORIDOR;
+    }
+    for (i = 0; i < (size_x - 1); i++) {
+        maze.bludiste[i + size_x] = WALL;
+    }
+}
+
+void addWall(blud *maze) {
+    static unsigned last = 0;
+
+    if (last == 0) {
+        last = maze->size_x + maze->size_x - 2;
+    }
+}
+
 int main() {
-    blud maze = storeBlud();
-
-    printBlud(&maze);
-    solve(&maze);
-
-    free(maze.bludiste);
-
+    makeMaze(8, 8, 12);
     return 0;
 }

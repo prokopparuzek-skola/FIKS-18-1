@@ -23,9 +23,9 @@ typedef struct {
 } buffer_t;
 
 typedef struct {
-    char *bludiste;
     int size_x;
     int size_y;
+    char *bludiste;
 } blud;
 
 blud storeBlud(void);
