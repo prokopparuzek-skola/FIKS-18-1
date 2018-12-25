@@ -174,20 +174,27 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
 
 int addWall(blud *maze) {
     static unsigned last = 0;
+    static char *check = NULL;
     unsigned x, y;
 
-    x = last % maze->size_x;
-    y = last / maze->size_x;
-
+    if (check ==  NULL) {
+        check = maze->bludiste;
+    }
+    if (check != maze->bludiste) {
+        last = 0;
+        check = maze->bludiste;
+    }
     if (last == 0) {
         last = maze->size_x + maze->size_x - 2;
     }
+    x = last % maze->size_x;
+    y = last / maze->size_x;
     if (maze->bludiste[maze->size_x * y] == WALL) { // Když je na začátku zeď
         if (x == maze->size_x - 2) {
             y += 2;
             x = maze->size_x - 1;
             last = x + maze->size_x * y;
-            if (y <= maze->size_y - 1) {
+            if (y >= maze->size_y - 1) {
                 return -1;
             }
             else {
@@ -206,7 +213,7 @@ int addWall(blud *maze) {
             y += 2;
             x = 0;
             last = x + maze->size_x * y;
-            if (y <= maze->size_y - 1) {
+            if (y >= maze->size_y - 1) {
                 return -1;
             }
             else {
@@ -223,8 +230,11 @@ int addWall(blud *maze) {
 }
 
 int main() {
-    int l;
-    scanf("%d", &l);
-    makeMaze(15, 7, l);
+    int t, m, n, k;
+    scanf("%d", &t);
+    for (; t > 0; t--) {
+        scanf("%d %d %d", &m, &n, &k);
+        makeMaze(n, m, k);
+    }
     return 0;
 }
