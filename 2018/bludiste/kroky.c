@@ -22,14 +22,14 @@ int solve(blud *maze) {
         makeSteps(&queue, maze);
     }
     count = findRoute(&queue, maze);
-    printBlud(maze);
-    printf("%d\n", count);
+    //printBlud(maze);
+    //printf("%d\n", count);
 
     free(queue.buff);
     free(queue.stackAc);
     free(queue.stackFu);
 
-    return queue.buff[(queue.size_x - 1) * (queue.size_y - 1)].depth + 1;
+    return count;
 }
 
 void initBuff(buffer_t *buff) {
@@ -46,7 +46,7 @@ void initBuff(buffer_t *buff) {
 }
 
 void makeSteps(buffer_t *queue, blud *maze) {
-    int i, *swapS;
+    unsigned int i, *swapS;
 
     for (i = 0; i <= queue->indexAc; i++) {
         solveStep(queue, maze, i);
@@ -99,10 +99,10 @@ unsigned findRoute(buffer_t *queue, blud *maze) {
 
     //printf("%d\n", queue->buff[position].depth);
     while (position) {
-        maze->bludiste[position] = ROUTE;
+        //maze->bludiste[position] = ROUTE;
         position = queue->buff[position].parent;
     }
-    maze->bludiste[position] = ROUTE;
+    //maze->bludiste[position] = ROUTE;
 
     return queue->buff[queue->size_x * queue->size_y - 1].depth + 1;
 }
@@ -133,9 +133,13 @@ void printBlud(blud *maze) {
 }
 
 void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
-    unsigned i;
+    unsigned i, ALenght;
     blud maze = {size_x, size_y, NULL};
 
+    if (lenght < size_x + size_y - 1) {
+        puts("Nejde to.");
+        return;
+    }
     maze.bludiste = malloc(size_x * size_y);
     if (maze.bludiste == NULL) {
         puts("Málo paměti");
@@ -147,17 +151,80 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
     for (i = 0; i < (size_x - 1); i++) {
         maze.bludiste[i + size_x] = WALL;
     }
+    while (1) {
+        ALenght = solve(&maze);
+        if (ALenght < lenght) {
+            if (addWall(&maze) == -1) {
+                puts("Nejde to.");
+                break;
+            }
+            continue;
+        }
+        else if (ALenght == lenght) {
+            printBlud(&maze);
+            break;
+        }
+        else if (ALenght > lenght) {
+            puts("Nejde to.");
+            break;
+        }
+    }
+    free(maze.bludiste);
 }
 
-void addWall(blud *maze) {
+int addWall(blud *maze) {
     static unsigned last = 0;
+    unsigned x, y;
+
+    x = last % maze->size_x;
+    y = last / maze->size_x;
 
     if (last == 0) {
         last = maze->size_x + maze->size_x - 2;
     }
+    if (maze->bludiste[maze->size_x * y] == WALL) { // Když je na začátku zeď
+        if (x == maze->size_x - 2) {
+            y += 2;
+            x = maze->size_x - 1;
+            last = x + maze->size_x * y;
+            if (y <= maze->size_y - 1) {
+                return -1;
+            }
+            else {
+                maze->bludiste[last] = WALL;
+                return 0;
+            }
+        }
+        else {
+            last++;
+            maze->bludiste[last] = WALL;
+            return 0;
+        }
+    }
+    else { // Když je na konci
+        if (x == 1) {
+            y += 2;
+            x = 0;
+            last = x + maze->size_x * y;
+            if (y <= maze->size_y - 1) {
+                return -1;
+            }
+            else {
+                maze->bludiste[last] = WALL;
+                return 0;
+            }
+        }
+        else {
+            last--;
+            maze->bludiste[last] = WALL;
+            return 0;
+        }
+    }
 }
 
 int main() {
-    makeMaze(8, 8, 12);
+    int l;
+    scanf("%d", &l);
+    makeMaze(15, 7, l);
     return 0;
 }
