@@ -145,23 +145,23 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
         puts("Málo paměti");
         exit(1);
     }
-//    if (size_y <= 5) { // swap
-//        maze.size_x = maze.size_x + maze.size_y;
-//        maze.size_y = maze.size_x - maze.size_y;
-//        maze.size_x = maze.size_x - maze.size_y;
-//    }
     for (i = 0; i < maze.size_x * maze.size_y; i++) {
         maze.bludiste[i] = CORIDOR;
     }
-    if (maze.size_y > 1) {
+    if (maze.size_y >= 5) {
         for (i = 0; i < (maze.size_x - 1); i++) {
             maze.bludiste[i + maze.size_x] = WALL;
+        }
+    }
+    else if (maze.size_y > 1) {
+        for (i = 0; i < (maze.size_y - 1); i++) {
+            maze.bludiste[1 + i * maze.size_x] = WALL;
         }
     }
     while (1) {
         ALenght = solve(&maze);
         if (ALenght < lenght) {
-            if (addWall(&maze) == -1) {
+            if (maze.size_y >= 5?addWall(&maze):addWallVertical(&maze) == -1) {
                 puts("Nejde to.");
                 break;
             }
@@ -230,6 +230,63 @@ int addWall(blud *maze) {
         }
         else {
             last--;
+            maze->bludiste[last] = WALL;
+            return 0;
+        }
+    }
+}
+
+int addWallVertical(blud *maze) {
+    static unsigned last = 0;
+    static char *check = NULL;
+    unsigned x, y;
+
+    if (check ==  NULL) {
+        check = maze->bludiste;
+    }
+    if (check != maze->bludiste) {
+        last = 0;
+        check = maze->bludiste;
+    }
+    if (last == 0) {
+        last = 1 + (maze->size_y - 2) * maze->size_x;
+    }
+    x = last % maze->size_x;
+    y = last / maze->size_x;
+    if (maze->bludiste[x] == WALL) { // Když je na hoře zeď
+        if (y == maze->size_y - 2) {
+            x += 2;
+            y = maze->size_y - 1;
+            last = y + maze->size_y * x;
+            if (x >= maze->size_x - 1) {
+                return -1;
+            }
+            else {
+                maze->bludiste[last] = WALL;
+                return 0;
+            }
+        }
+        else {
+            last += maze->size_x;
+            maze->bludiste[last] = WALL;
+            return 0;
+        }
+    }
+    else { // Když je dole
+        if (y == 1) {
+            x += 2;
+            y = 0;
+            last = y + maze->size_y * x;
+            if (x >= maze->size_x - 1) {
+                return -1;
+            }
+            else {
+                maze->bludiste[last] = WALL;
+                return 0;
+            }
+        }
+        else {
+            last -= maze->size_x;
             maze->bludiste[last] = WALL;
             return 0;
         }
