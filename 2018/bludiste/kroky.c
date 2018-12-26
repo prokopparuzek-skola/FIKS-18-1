@@ -87,7 +87,7 @@ void solveStep(buffer_t *queue, blud *maze, int index) {
         if (steps[i] == -1) {
             continue;
         }
-        queue->indexFu++; // zvyš index příštích budů o 1
+        queue->indexFu++; // zvyš index příštích bodů o 1
         queue->stackFu[queue->indexFu] = steps[i]; // ulož tam aktuální bod
         queue->buff[steps[i]].depth = queue->buff[queue->stackAc[index]].depth + 1; // ulož do něj hloubku
         queue->buff[steps[i]].parent = queue->stackAc[index]; // a rodiče
