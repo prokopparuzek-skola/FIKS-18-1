@@ -148,15 +148,23 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
     for (i = 0; i < maze.size_x * maze.size_y; i++) {
         maze.bludiste[i] = CORIDOR;
     }
-    if (maze.size_y >= 5) {
+    if (maze.size_y >= 5 && maze.size_x != 1) {
         for (i = 0; i < (maze.size_x - 1); i++) {
             maze.bludiste[i + maze.size_x] = WALL;
         }
     }
-    else if (maze.size_y > 1) {
+    else if (maze.size_y > 1 && maze.size_x != 1) {
         for (i = 0; i < (maze.size_y - 1); i++) {
             maze.bludiste[1 + i * maze.size_x] = WALL;
         }
+    }
+    if (maze.size_y == 1 && lenght != maze.size_x) {
+        puts("Nejde to.");
+        return;
+    }
+    if (maze.size_x == 1 && lenght != maze.size_y) {
+        puts("Nejde to.");
+        return;
     }
     while (1) {
         ALenght = solve(&maze);
@@ -185,11 +193,11 @@ int addWall(blud *maze) {
     unsigned x, y;
 
     if (check ==  NULL) {
-        check = maze->bludiste;
+        check = maze->bludiste + maze->size_x;
     }
-    if (check != maze->bludiste) {
+    if (check != maze->bludiste + maze->size_x) {
         last = 0;
-        check = maze->bludiste;
+        check = maze->bludiste + maze->size_x;
     }
     if (last == 0) {
         last = maze->size_x + maze->size_x - 2;
@@ -242,11 +250,11 @@ int addWallVertical(blud *maze) {
     unsigned x, y;
 
     if (check ==  NULL) {
-        check = maze->bludiste;
+        check = maze->bludiste + maze->size_x;
     }
-    if (check != maze->bludiste) {
+    if (check != maze->bludiste + maze->size_x) {
         last = 0;
-        check = maze->bludiste;
+        check = maze->bludiste + maze->size_x;
     }
     if (last == 0) {
         last = 1 + (maze->size_y - 2) * maze->size_x;
