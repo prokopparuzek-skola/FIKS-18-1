@@ -257,7 +257,7 @@ int addWallVertical(blud *maze) {
         if (y == maze->size_y - 2) {
             x += 2;
             y = maze->size_y - 1;
-            last = y + maze->size_y * x;
+            last = x + maze->size_x * y;
             if (x >= maze->size_x - 1) {
                 return -1;
             }
@@ -276,7 +276,7 @@ int addWallVertical(blud *maze) {
         if (y == 1) {
             x += 2;
             y = 0;
-            last = y + maze->size_y * x;
+            last = x + maze->size_x * y;
             if (x >= maze->size_x - 1) {
                 return -1;
             }
