@@ -282,6 +282,11 @@ int addWallVertical(blud *maze) {
 }
 
 int main() {
-    makeMaze(8, 8, 12);
+    int t, m, n, k;
+    scanf("%d", &t);
+    for (; t > 0; t--) {
+        scanf("%d %d %d", &m, &n, &k);
+        makeMaze(n, m, k);
+    }
     return 0;
 }
