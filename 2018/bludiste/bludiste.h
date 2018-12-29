@@ -38,4 +38,5 @@ unsigned findRoute(buffer_t *queue, blud *maze);
 int addWall(blud *maze);
 void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght);
 int addWallVertical(blud *maze);
+char  *hash(blud *maze);
 #endif /* __BLUDISTE */

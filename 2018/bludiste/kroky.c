@@ -193,11 +193,11 @@ int addWall(blud *maze) {
     unsigned x, y;
 
     if (check ==  NULL) {
-        check = maze->bludiste + maze->size_x;
+        check = hash(maze);
     }
-    if (check != maze->bludiste + maze->size_x) {
+    if (check != hash(maze)) {
         last = 0;
-        check = maze->bludiste + maze->size_x;
+        check = hash(maze);
     }
     if (last == 0) {
         last = maze->size_x + maze->size_x - 2;
@@ -250,11 +250,11 @@ int addWallVertical(blud *maze) {
     unsigned x, y;
 
     if (check ==  NULL) {
-        check = maze->bludiste + maze->size_x;
+        check = hash(maze);
     }
-    if (check != maze->bludiste + maze->size_x) {
+    if (check != hash(maze)) {
         last = 0;
-        check = maze->bludiste + maze->size_x;
+        check = hash(maze);
     }
     if (last == 0) {
         last = 1 + (maze->size_y - 2) * maze->size_x;
@@ -299,6 +299,10 @@ int addWallVertical(blud *maze) {
             return 0;
         }
     }
+}
+
+char  *hash(blud *maze) {
+    return maze->bludiste + (maze->size_x ^ maze->size_y);
 }
 
 int main() {
