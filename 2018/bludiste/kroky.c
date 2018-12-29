@@ -133,7 +133,7 @@ void printBlud(blud *maze) {
 }
 
 void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
-    unsigned i, ALenght;
+    unsigned i, ALenght, last = 0;
     blud maze = {size_x, size_y, NULL};
 
     if (lenght < size_x + size_y - 1) {
@@ -152,11 +152,13 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
         for (i = 0; i < (maze.size_x - 1); i++) {
             maze.bludiste[i + maze.size_x] = WALL;
         }
+        last = maze.size_x + maze.size_x - 2;
     }
     else if (maze.size_y > 1 && maze.size_x != 1) {
         for (i = 0; i < (maze.size_y - 1); i++) {
             maze.bludiste[1 + i * maze.size_x] = WALL;
         }
+        last = 1 + (maze.size_y - 2) * maze.size_x;
     }
     if (maze.size_y == 1 && lenght != maze.size_x) {
         puts("Nejde to.");
@@ -169,7 +171,7 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
     while (1) {
         ALenght = solve(&maze);
         if (ALenght < lenght) {
-            if (maze.size_y >= 5?addWall(&maze):addWallVertical(&maze) == -1) {
+            if (maze.size_y >= 5?addWall(&maze, &last):addWallVertical(&maze, &last) == -1) {
                 puts("Nejde to.");
                 break;
             }
@@ -187,39 +189,27 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
     free(maze.bludiste);
 }
 
-int addWall(blud *maze) {
-    static unsigned last = 0;
-    static char *check = NULL;
+int addWall(blud *maze, unsigned *last) {
     unsigned x, y;
 
-    if (check ==  NULL) {
-        check = hash(maze);
-    }
-    if (check != hash(maze)) {
-        last = 0;
-        check = hash(maze);
-    }
-    if (last == 0) {
-        last = maze->size_x + maze->size_x - 2;
-    }
-    x = last % maze->size_x;
-    y = last / maze->size_x;
+    x = *last % maze->size_x;
+    y = *last / maze->size_x;
     if (maze->bludiste[maze->size_x * y] == WALL) { // Když je na začátku zeď
         if (x == maze->size_x - 2) {
             y += 2;
             x = maze->size_x - 1;
-            last = x + maze->size_x * y;
+            *last = x + maze->size_x * y;
             if (y >= maze->size_y - 1) {
                 return -1;
             }
             else {
-                maze->bludiste[last] = WALL;
+                maze->bludiste[*last] = WALL;
                 return 0;
             }
         }
         else {
-            last++;
-            maze->bludiste[last] = WALL;
+            (*last)++;
+            maze->bludiste[*last] = WALL;
             return 0;
         }
     }
@@ -227,56 +217,44 @@ int addWall(blud *maze) {
         if (x == 1) {
             y += 2;
             x = 0;
-            last = x + maze->size_x * y;
+            *last = x + maze->size_x * y;
             if (y >= maze->size_y - 1) {
                 return -1;
             }
             else {
-                maze->bludiste[last] = WALL;
+                maze->bludiste[*last] = WALL;
                 return 0;
             }
         }
         else {
-            last--;
-            maze->bludiste[last] = WALL;
+            (*last)--;
+            maze->bludiste[*last] = WALL;
             return 0;
         }
     }
 }
 
-int addWallVertical(blud *maze) {
-    static unsigned last = 0;
-    static char *check = NULL;
+int addWallVertical(blud *maze, unsigned *last) {
     unsigned x, y;
 
-    if (check ==  NULL) {
-        check = hash(maze);
-    }
-    if (check != hash(maze)) {
-        last = 0;
-        check = hash(maze);
-    }
-    if (last == 0) {
-        last = 1 + (maze->size_y - 2) * maze->size_x;
-    }
-    x = last % maze->size_x;
-    y = last / maze->size_x;
+    x = *last % maze->size_x;
+    y = *last / maze->size_x;
     if (maze->bludiste[x] == WALL) { // Když je na hoře zeď
         if (y == maze->size_y - 2) {
             x += 2;
             y = maze->size_y - 1;
-            last = x + maze->size_x * y;
+            *last = x + maze->size_x * y;
             if (x >= maze->size_x - 1) {
                 return -1;
             }
             else {
-                maze->bludiste[last] = WALL;
+                maze->bludiste[*last] = WALL;
                 return 0;
             }
         }
         else {
-            last += maze->size_x;
-            maze->bludiste[last] = WALL;
+            *last += maze->size_x;
+            maze->bludiste[*last] = WALL;
             return 0;
         }
     }
@@ -284,27 +262,21 @@ int addWallVertical(blud *maze) {
         if (y == 1) {
             x += 2;
             y = 0;
-            last = x + maze->size_x * y;
+            *last = x + maze->size_x * y;
             if (x >= maze->size_x - 1) {
                 return -1;
             }
             else {
-                maze->bludiste[last] = WALL;
+                maze->bludiste[*last] = WALL;
                 return 0;
             }
         }
         else {
-            last -= maze->size_x;
-            maze->bludiste[last] = WALL;
+            *last -= maze->size_x;
+            maze->bludiste[*last] = WALL;
             return 0;
         }
     }
-}
-
-char  *hash(blud *maze) {
-    char *hash = maze->bludiste + (maze->size_x ^ maze->size_y) - (maze->size_y & maze->size_x);
-    fprintf(stderr, "%d %d %p\n",maze->size_x, maze->size_y, hash);
-    return hash;
 }
 
 int main() {

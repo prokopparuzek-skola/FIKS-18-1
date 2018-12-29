@@ -35,8 +35,7 @@ void initBuff(buffer_t *buff);
 void makeSteps(buffer_t *queue, blud*);
 void solveStep(buffer_t *queue, blud *maze, int index);
 unsigned findRoute(buffer_t *queue, blud *maze);
-int addWall(blud *maze);
+int addWall(blud *maze, unsigned*);
 void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght);
-int addWallVertical(blud *maze);
-char  *hash(blud *maze);
+int addWallVertical(blud *maze, unsigned*);
 #endif /* __BLUDISTE */
