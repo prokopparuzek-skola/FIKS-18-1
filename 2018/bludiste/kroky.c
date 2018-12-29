@@ -302,7 +302,7 @@ int addWallVertical(blud *maze) {
 }
 
 char  *hash(blud *maze) {
-    return maze->bludiste + (maze->size_x ^ maze->size_y);
+    return maze->bludiste + (maze->size_x ^ maze->size_y) - (maze->size_y & maze->size_x);
 }
 
 int main() {
