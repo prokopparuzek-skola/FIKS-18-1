@@ -302,14 +302,16 @@ int addWallVertical(blud *maze) {
 }
 
 char  *hash(blud *maze) {
-    return maze->bludiste + (maze->size_x ^ maze->size_y) - (maze->size_y & maze->size_x);
+    char *hash = maze->bludiste + (maze->size_x ^ maze->size_y) - (maze->size_y & maze->size_x);
+    fprintf(stderr, "%d %d %p\n",maze->size_x, maze->size_y, hash);
+    return hash;
 }
 
 int main() {
     int t, m, n, k;
     scanf("%d", &t);
     for (; t > 0; t--) {
-        scanf("%d %d %d", &m, &n, &k);
+        scanf("%d%d%d", &m, &n, &k);
         makeMaze(n, m, k);
     }
     return 0;
