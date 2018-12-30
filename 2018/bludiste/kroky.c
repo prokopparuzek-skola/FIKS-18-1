@@ -209,12 +209,22 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
                 }
             }
             if (maze.size_y >= 5 && maze.size_x > 1) {
-                last = makeWall(&maze, last, 0);
-                makeWallVertical(&maze, last, 1);
+                if (lenght == maze.size_x + maze.size_y - 1) {
+                    makeWall(&maze, last, 1);
+                }
+                else {
+                    last = makeWall(&maze, last, 0);
+                    makeWallVertical(&maze, last, 1);
+                }
             }
             else if (maze.size_y > 1 && maze.size_x > 1) {
-                last = makeWallVertical(&maze, last, 0);
-                makeWall(&maze, last, 1);
+                if (lenght == maze.size_x + maze.size_y - 1) {
+                    makeWallVertical(&maze, last, 1);
+                }
+                else {
+                    last = makeWallVertical(&maze, last, 0);
+                    makeWall(&maze, last, 1);
+                }
             }
             printBlud(&maze);
             break;
@@ -318,7 +328,7 @@ int addWallVertical(blud *maze, unsigned *last) {
 }
 
 unsigned makeWall(blud *maze, unsigned last, int end) {
-    for (; last < (maze->size_y - 1) * maze->size_x; last += maze->size_x) {
+    for (; last / maze->size_x < maze->size_y - 1; last += maze->size_x) {
         maze->bludiste[last] = WALL;
     }
     if (end) {
@@ -331,13 +341,14 @@ unsigned makeWall(blud *maze, unsigned last, int end) {
 }
 
 unsigned makeWallVertical(blud *maze, unsigned last, int end) {
+    int check = last;
     for (; (last % maze->size_x) < (maze->size_x - 1); last++) {
         maze->bludiste[last] = WALL;
     }
     if (end) {
         maze->bludiste[last] = WALL;
     }
-    else {
+    else if (last != check){
         last--;
     }
     return last;
