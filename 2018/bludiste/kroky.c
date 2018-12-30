@@ -178,6 +178,14 @@ void makeMaze(unsigned size_x, unsigned size_y, unsigned lenght) {
             continue;
         }
         else if (ALenght == lenght) {
+            if (maze.size_y >= 5 && maze.size_x > 1 && maze.size_y > 1) {
+                makeWall(&maze, &last);
+                makeWallVertical(&maze, &last);
+            }
+            else if (maze.size_x > 1 && maze.size_y > 1) {
+                makeWallVertical(&maze, &last);
+                makeWall(&maze, &last);
+            }
             printBlud(&maze);
             break;
         }
@@ -277,6 +285,20 @@ int addWallVertical(blud *maze, unsigned *last) {
             return 0;
         }
     }
+}
+
+void makeWall(blud *maze, unsigned *last) {
+    for (; *last <= (maze->size_y - 1) * maze->size_x; *last += maze->size_x) {
+        maze->bludiste[*last] = WALL;
+    }
+    *last -= maze->size_x;
+}
+
+void makeWallVertical(blud *maze, unsigned *last) {
+    for (; (*last % maze->size_x) < (maze->size_x - 1); (*last)++) {
+        maze->bludiste[*last] = WALL;
+    }
+    (*last)--;
 }
 
 int main() {
