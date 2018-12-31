@@ -1,13 +1,13 @@
 #!/bin/bash
 
-rm o.sav
+if [ -e o.sav ]; then rm o.sav ; fi
 read t
 for i in $( seq $t )
     do read m n k
     echo "1 $m $n $k" | ./a.out > $i.sav
 done
 for i in $( seq $t )
-    do  check=$(head -n 1 "$i.sav") 
+    do  check=$(head -n 1 "$i.sav")
         if [ "$check" = "Nejde to." ]; then  continue; fi
         wc $i.sav | sed -e "s/ \+/ /g" -e "s/^ \+//" | cut -d " " -f 1,3 > tmp
         y=$(cut -d " " -f 1 tmp)
