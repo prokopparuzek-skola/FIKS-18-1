@@ -22,7 +22,7 @@ int solve(blud *maze) {
         makeSteps(&queue, maze);
     }
     count = findRoute(&queue, maze);
-    printBlud(maze);
+    //printBlud(maze);
     //printf("%d\n", count);
 
     free(queue.buff);
@@ -99,10 +99,10 @@ unsigned findRoute(buffer_t *queue, blud *maze) {
 
     //printf("%d\n", queue->buff[position].depth);
     while (position) {
-        maze->bludiste[position] = ROUTE;
+        //maze->bludiste[position] = ROUTE;
         position = queue->buff[position].parent;
     }
-    maze->bludiste[position] = ROUTE;
+    //maze->bludiste[position] = ROUTE;
 
     return queue->buff[queue->size_x * queue->size_y - 1].depth + 1;
 }
