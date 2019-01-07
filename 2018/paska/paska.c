@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "paska.h"
 
-int compare (const void *first, const void *twice) {
+static int compare (const void *first, const void *twice) {
     bod *one = (bod*) first;
     bod *two = (bod*) twice;
     if (one->x != two->x) {
@@ -13,10 +14,41 @@ int compare (const void *first, const void *twice) {
     }
 }
 
-double compute (bod *stack, unsigned K) {
+double compute (bod *stack, unsigned IndexStack) {
+    double sum = 0;
+    for (; IndexStack > 0; IndexStack--) {
+       sum += sqrt(pow(abs(stack[IndexStack].x) + abs(stack[IndexStack - 1].x), 2) + pow(abs(stack[IndexStack].y) + abs(stack[IndexStack - 1].y), 2));  // Pythagoras
+    }
+    return sum;
+}
+
+bod* set (envelop *obalky) {
+    bod *stack;
+    unsigned i, IndexStack = 0;
+
+    stack = malloc(sizeof(bod) * (obalky->IndexDolni + obalky->IndexHorni + 1));
+    if (stack == NULL) {
+        puts("Málo paměti!");
+        exit(1);
+    }
+    for (i = 0; i <= obalky->IndexHorni; i++) {
+        stack[IndexStack] = obalky->Horni[i];
+        IndexStack++;
+    }
+    for (i = obalky->IndexDolni; i >= 0; i--) {
+        stack[IndexStack] = obalky->Dolni[i];
+        IndexStack++;
+    }
+    free(obalky->Horni);
+    free(obalky->Dolni);
+    return stack;
+}
+
+bod* points (bod *stack, unsigned K) {
     unsigned i, IndexHorni = 0, IndexDolni = 0;
     bod *Dolni, *Horni;
     int determinant = 0;
+    envelop obalky;
 
     Horni =  malloc(K * sizeof(bod));
     Dolni = malloc(K * sizeof(bod));
@@ -56,12 +88,18 @@ double compute (bod *stack, unsigned K) {
         Dolni[IndexDolni] = stack[i];
     }
 
-    puts("Horni");
-    for (i = 0; i <= IndexHorni; i++)
-        printf("%d %d\n", Horni[i].x, Horni[i].y);
-    puts("Dolni");
-    for (i = 0; i <= IndexDolni; i++)
-        printf("%d %d\n", Dolni[i].x, Dolni[i].y);
+//    puts("Horni");
+//    for (i = 0; i <= IndexHorni; i++)
+//        printf("%d %d\n", Horni[i].x, Horni[i].y);
+//    puts("Dolni");
+//    for (i = 0; i <= IndexDolni; i++)
+//        printf("%d %d\n", Dolni[i].x, Dolni[i].y);
+    obalky.IndexHorni = IndexHorni;
+    obalky.IndexDolni = IndexDolni;
+    obalky.Horni = Horni;
+    obalky.Dolni = Dolni;
+    stack = set(&obalky);
+    return stack;
 }
 
 int main () {
@@ -90,6 +128,7 @@ int main () {
         }
         IndexStack += K;
     }
-    compute(stack, IndexStack);
+    stack = points(stack, IndexStack);
+    printf("%lf\n", compute (stack, IndexStack));
     return 0;
 }
