@@ -62,5 +62,6 @@ double compute (void) {
 }
 
 int main () {
+    compute();
     return 0;
 }
