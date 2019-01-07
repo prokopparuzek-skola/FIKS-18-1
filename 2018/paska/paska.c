@@ -33,6 +33,7 @@ double compute (void) {
     qsort(stack, K, sizeof(bod), compare);
     H[0] = stack[0];
     D[0] = stack[0];
+
     for (i = 1; i < K; i++) {
         if (IH >= 2) { // Horní obálka
             determinant = (H[IH].x - H[IH - 1].x) * (stack[i].y - H[IH].y) - (stack[i].x - H[IH].x) * (H[IH].y - (H[IH - 1].y)); // Počítá determinant, směr úhlu
@@ -43,7 +44,6 @@ double compute (void) {
         }
         IH++;
         H[IH] = stack[i];
-    }
         if (ID >= 2) { // Dolní obálka
             determinant = (D[ID].x - D[ID - 1].x) * (stack[i].y - D[ID].y) - (stack[i].x - D[ID].x) * (D[ID].y - (D[ID - 1].y)); // Počítá determinant, směr úhlu
         }
@@ -53,6 +53,12 @@ double compute (void) {
         }
         ID++;
         D[ID] = stack[i];
+    }
+
+    for (i = 0; i < IH; i++)
+        printf("%d %d\n", H[IH].x, H[IH].y);
+    for (i = 0; i < ID; i++)
+        printf("%d %d\n", D[ID].x, D[ID].y);
 }
 
 int main () {
