@@ -17,14 +17,14 @@ static int compare (const void *first, const void *twice) {
 double compute (bod *stack, unsigned IndexStack) {
     double sum = 0;
     for (; IndexStack > 0; IndexStack--) {
-       sum += sqrt(pow(abs(stack[IndexStack].x) + abs(stack[IndexStack - 1].x), 2) + pow(abs(stack[IndexStack].y) + abs(stack[IndexStack - 1].y), 2));  // Pythagoras
+       sum += sqrt(pow(abs(stack[IndexStack].x - stack[IndexStack - 1].x), 2) + pow(abs(stack[IndexStack].y - stack[IndexStack - 1].y), 2));  // Pythagoras
     }
     return sum;
 }
 
 bod* set (envelop *obalky) {
     bod *stack;
-    unsigned i, IndexStack = 0;
+    int i, IndexStack = 0;
 
     stack = malloc(sizeof(bod) * (obalky->IndexDolni + obalky->IndexHorni + 1));
     if (stack == NULL) {
@@ -35,7 +35,7 @@ bod* set (envelop *obalky) {
         stack[IndexStack] = obalky->Horni[i];
         IndexStack++;
     }
-    for (i = obalky->IndexDolni; i >= 0; i--) {
+    for (i = obalky->IndexDolni - 1; i >= 0; i--) {
         stack[IndexStack] = obalky->Dolni[i];
         IndexStack++;
     }
@@ -130,5 +130,6 @@ int main () {
     }
     stack = points(stack, IndexStack);
     printf("%lf\n", compute (stack, IndexStack));
+    free(stack);
     return 0;
 }
