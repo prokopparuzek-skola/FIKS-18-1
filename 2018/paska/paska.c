@@ -62,6 +62,10 @@ double compute (void) {
 }
 
 int main () {
-    compute();
+    unsigned i, N;
+    scanf("%u", &N);
+    for (i = 0; i < N; i++) {
+        compute();
+    }
     return 0;
 }
