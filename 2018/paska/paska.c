@@ -44,11 +44,12 @@ bod* set (envelop *obalky) {
     return stack;
 }
 
-bod* points (bod *stack, unsigned K) {
+magazine points (bod *stack, unsigned K) {
     unsigned i, IndexHorni = 0, IndexDolni = 0;
     bod *Dolni, *Horni;
     int determinant = 0;
     envelop obalky;
+    magazine Stack;
 
     Horni =  malloc(K * sizeof(bod));
     Dolni = malloc(K * sizeof(bod));
@@ -99,12 +100,15 @@ bod* points (bod *stack, unsigned K) {
     obalky.Horni = Horni;
     obalky.Dolni = Dolni;
     stack = set(&obalky);
-    return stack;
+    Stack.stack = stack;
+    Stack.Index = IndexDolni +  IndexHorni + 1;
+    return Stack;
 }
 
 int main () {
     unsigned i, j, N, K, SizeStack = 32, IndexStack = 0;
     bod *stack;
+    magazine Stack;
 
     stack = malloc(sizeof(bod) * BLOCK);
     if (stack == NULL) {
@@ -128,8 +132,9 @@ int main () {
         }
         IndexStack += K;
     }
-    stack = points(stack, IndexStack);
-    printf("%lf\n", compute (stack, IndexStack));
+    Stack = points(stack, IndexStack);
+    printf("%lf\n", compute (Stack.stack, Stack.Index));
     free(stack);
+    free(Stack.stack);
     return 0;
 }

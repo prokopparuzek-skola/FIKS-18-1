@@ -13,7 +13,11 @@ typedef struct {
     bod *Dolni;
 } envelop;
 
+typedef struct {
+    unsigned Index;
+    bod *stack;
+} magazine;
 static int compare (const void *first, const void *twice);
-bod* points (bod*, unsigned);
+magazine points (bod*, unsigned);
 double compute (bod *stack, unsigned IndexStack);
 #endif /*__PASKA*/
