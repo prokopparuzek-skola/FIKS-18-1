@@ -16,7 +16,7 @@ static int compare (const void *first, const void *twice) {
 
 double compute (bod *stack, unsigned IndexStack) {
     double sum = 0;
-    for (; IndexStack > 0; IndexStack--) {
+    for (; IndexStack != 0; IndexStack--) {
        sum += sqrt(pow(abs(stack[IndexStack].x - stack[IndexStack - 1].x), 2) + pow(abs(stack[IndexStack].y - stack[IndexStack - 1].y), 2));  // Pythagoras
     }
     return sum;
@@ -101,7 +101,7 @@ magazine points (bod *stack, unsigned K) {
     obalky.Dolni = Dolni;
     stack = set(&obalky);
     Stack.stack = stack;
-    Stack.Index = IndexDolni +  IndexHorni + 1;
+    Stack.Index = IndexDolni +  IndexHorni;
     return Stack;
 }
 
@@ -133,7 +133,7 @@ int main () {
         IndexStack += K;
     }
     Stack = points(stack, IndexStack);
-    printf("%lf\n", compute (Stack.stack, Stack.Index));
+    printf("%.2lf\n", compute (Stack.stack, Stack.Index));
     free(stack);
     free(Stack.stack);
     return 0;
