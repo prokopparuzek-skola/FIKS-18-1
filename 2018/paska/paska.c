@@ -3,7 +3,7 @@
 #include <math.h>
 #include "paska.h"
 
-static int compare (const void *first, const void *twice) {
+static int compare (const void *first, const void *twice) { // Porovnává body
     bod *one = (bod*) first;
     bod *two = (bod*) twice;
     if (one->x != two->x) {
@@ -14,7 +14,7 @@ static int compare (const void *first, const void *twice) {
     }
 }
 
-double compute (bod *stack, unsigned IndexStack) {
+double compute (bod *stack, unsigned IndexStack) { // Počítá vzdálenost mezi body pomocí pythagorovy věty
     double sum = 0;
     for (; IndexStack != 0; IndexStack--) {
        sum += sqrt(pow(abs(stack[IndexStack].x - stack[IndexStack - 1].x), 2) + pow(abs(stack[IndexStack].y - stack[IndexStack - 1].y), 2));  // Pythagoras
@@ -22,7 +22,7 @@ double compute (bod *stack, unsigned IndexStack) {
     return sum;
 }
 
-bod* set (envelop *obalky) {
+bod* set (envelop *obalky) { // Každý bod pouze jednou v pořadí jak jsou za sebou, 1 bod je 2 krát
     bod *stack;
     int i, IndexStack = 0;
 
