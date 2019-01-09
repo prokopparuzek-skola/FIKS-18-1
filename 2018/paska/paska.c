@@ -59,44 +59,44 @@ magazine points (bod *stack, unsigned K) {
         exit(1);
     }
 
-    qsort(stack, K, sizeof(bod), compare);
-    Horni[0] = stack[0];
+    qsort(stack, K, sizeof(bod), compare); // Seřadí body dle velikosti, podle x, pak dle y
+    Horni[0] = stack[0]; // Vloží 1. bod do obou obálek
     Dolni[0] = stack[0];
 
-    for (i = 1; i < K; i++) {
+    for (i = 1; i < K; i++) { // Prochází postupně body
         if (IndexHorni >= 1) { // Horní obálka
             determinant = (Horni[IndexHorni].x - Horni[IndexHorni - 1].x) * (stack[i].y - Horni[IndexHorni].y) - (stack[i].x - Horni[IndexHorni].x) * (Horni[IndexHorni].y - (Horni[IndexHorni - 1].y)); // Počítá determinant, směr úhlu
         }
-        while (IndexHorni >= 1 && determinant >= 0) {
+        while (IndexHorni >= 1 && determinant >= 0) { // Když je dost bodů a zárověn je úhel orientován doleva => odstraníme poslední bod co kazí obal
             IndexHorni--;
             if (IndexHorni >= 1) {
                 determinant = (Horni[IndexHorni].x - Horni[IndexHorni - 1].x) * (stack[i].y - Horni[IndexHorni].y) - (stack[i].x - Horni[IndexHorni].x) * (Horni[IndexHorni].y - (Horni[IndexHorni - 1].y)); // Počítá determinant, směr úhlu
             }
         }
-        IndexHorni++;
+        IndexHorni++; // Přídám bod do horní obálky
         Horni[IndexHorni] = stack[i];
 
         if (IndexDolni >= 1) { // Dolní obálka
             determinant = (Dolni[IndexDolni].x - Dolni[IndexDolni - 1].x) * (stack[i].y - Dolni[IndexDolni].y) - (stack[i].x - Dolni[IndexDolni].x) * (Dolni[IndexDolni].y - (Dolni[IndexDolni - 1].y)); // Počítá determinant, směr úhlu
         }
-        while (IndexDolni >= 1 && determinant <= 0) {
+        while (IndexDolni >= 1 && determinant <= 0) { // Když je dost bodů a zárověn je úhel orientován doleva => odstraníme poslední bod co kazí obal
             IndexDolni--;
             if (IndexDolni >= 1) {
                 determinant = (Dolni[IndexDolni].x - Dolni[IndexDolni - 1].x) * (stack[i].y - Dolni[IndexDolni].y) - (stack[i].x - Dolni[IndexDolni].x) * (Dolni[IndexDolni].y - (Dolni[IndexDolni - 1].y)); // Počítá determinant, směr úhlu
             }
         }
-        IndexDolni++;
+        IndexDolni++; // Přidám bod do dolní obálky
         Dolni[IndexDolni] = stack[i];
     }
 
-    obalky.IndexHorni = IndexHorni;
+    obalky.IndexHorni = IndexHorni; // Načtu obálky do struktury
     obalky.IndexDolni = IndexDolni;
     obalky.Horni = Horni;
     obalky.Dolni = Dolni;
-    stack = set(&obalky);
+    stack = set(&obalky); // Odstraním přebytečné body
     Stack.stack = stack;
     Stack.Index = IndexDolni +  IndexHorni;
-    return Stack;
+    return Stack; // Vrátím body na obalu
 }
 
 int main () {
@@ -127,7 +127,7 @@ int main () {
         IndexStack += K;
     }
     Stack = points(stack, IndexStack); // Získání bodů na obalu
-    printf("%.2lf\n", compute (Stack.stack, Stack.Index));
+    printf("%.2lf\n", compute (Stack.stack, Stack.Index)); // Spočítání vzdálenosti a její vytištění s přesností na 2 desetiná místa
     free(stack);
     free(Stack.stack);
     return 0;
