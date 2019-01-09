@@ -9,7 +9,6 @@ void prepocti(date *from) { // Přepočítá datum
 
     date to = {1, 1, 1, 1};
     days = spoctiDny(from);
-    printf("%d\n", days);
     spoctiDatum(days, &to);
     printf("%d %d %d %d\n",to.dayOfWeek, to.day, to.month, to.year);
 }
