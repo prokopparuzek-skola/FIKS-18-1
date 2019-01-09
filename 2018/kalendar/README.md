@@ -15,6 +15,7 @@ Podle mého odhadu, jelikož každý den použji jednou je složitost `O(N)`.
 
 ### Modifikatelnost
 Pokud se u jiného kalendáře nezmění počet výjimek z přestupných let je algoritmus modifikovatelný pouze zmněnou konstant ve zdrojovém kódu.
+Pokud se zmnění počet výjimek, je třeba program přepsat.
 
 ### Poznámky
 Funguje pouze pro data od 20.8.1984 a dále, před začátkem Kalendáře nejsem spočítat datum.
