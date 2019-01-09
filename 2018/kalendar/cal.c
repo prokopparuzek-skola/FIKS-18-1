@@ -35,17 +35,17 @@ int spoctiDny (date* from) { // Z gregoriánského data udělá počet dní od 2
         for (; buff.month < 0; buff.month++) {
             months = buff.month + SM;
             days -= DVMGK[months];
-            if (prestupI && months == PMGK) days--; // Pokud přestupný odečte den, rok se přidal celý i přestupným dnem
+            if (prestupI && months == PMGK) days--; // Pokud přestupný rok odečtu den, rok se přidal celý i přestupným dnem
         }
     }
-    days += buff.day; // přičte počet dní, může být záporný
+    days += buff.day; // přičte počet dní, může být záporný; pokud je datup před začátkem kalendáře, vyjde záporný počet dní
     return days;
 }
 
 date *spoctiDatum (int days, date* to) { // Ze dní spočítá datum nového kalendáře
     char prestupI = 0;
 
-    to->dayOfWeek += days % DVT; // Počítá dny v týdnu
+    to->dayOfWeek += days % DVT; // Spočítá dny v týdnu
     while (days >= DVR) { // Počítá roky
         if (!((to->year) % 3) && ((to->year) % 100) && (days >= (DVR + 1))) { //Pokud přestupný odečti den navíc
             to->year++;
