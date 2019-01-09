@@ -89,12 +89,6 @@ magazine points (bod *stack, unsigned K) {
         Dolni[IndexDolni] = stack[i];
     }
 
-//    puts("Horni");
-//    for (i = 0; i <= IndexHorni; i++)
-//        printf("%d %d\n", Horni[i].x, Horni[i].y);
-//    puts("Dolni");
-//    for (i = 0; i <= IndexDolni; i++)
-//        printf("%d %d\n", Dolni[i].x, Dolni[i].y);
     obalky.IndexHorni = IndexHorni;
     obalky.IndexDolni = IndexDolni;
     obalky.Horni = Horni;
