@@ -7,7 +7,7 @@
 void prepocti(date *from) { // Přepočítá datum
     int days;
 
-    date to = {1, 1, 1, 1};
+    date to = {1, 1, 1, 1}; // 1. den v novém kalendáři, přičítá se k němu
     days = spoctiDny(from);
     spoctiDatum(days, &to);
     printf("%d %d %d %d\n",to.dayOfWeek, to.day, to.month, to.year);
@@ -90,7 +90,6 @@ int main() {
 
     scanf("%u", &N);
     for (i = 0; i < N; i++) {
-    //while (1) { // Na testování, není potřeba zadávat počet
         scanf("%d %d %d", &from.day, &from.month, &from.year);
         prepocti(&from);
     }
