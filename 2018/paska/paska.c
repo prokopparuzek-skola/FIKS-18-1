@@ -22,7 +22,7 @@ double compute (bod *stack, unsigned IndexStack) { // Počítá vzdálenost mezi
     return sum;
 }
 
-bod* set (envelop *obalky) { // Každý bod pouze jednou v pořadí jak jsou za sebou, 1 bod je 2 krát
+bod* set (envelop *obalky) { // Každý bod pouze jednou v pořadí jak jsou za sebou, 1 bod je 2 krát; Ze dvou obálk udělá jednu výslednou
     bod *stack;
     int i, IndexStack = 0;
 
@@ -46,10 +46,10 @@ bod* set (envelop *obalky) { // Každý bod pouze jednou v pořadí jak jsou za 
 
 magazine points (bod *stack, unsigned K) {
     unsigned i, IndexHorni = 0, IndexDolni = 0;
-    bod *Dolni, *Horni;
-    int determinant = 0;
-    envelop obalky;
-    magazine Stack;
+    bod *Dolni, *Horni; // Ukazatele na body v dolní a horní obálce
+    int determinant = 0; // sem přijde determinant (orientace úhlu)
+    envelop obalky; // Obalky, parametr set()
+    magazine Stack; // Návratová struktura
 
     Horni =  malloc(K * sizeof(bod));
     Dolni = malloc(K * sizeof(bod));
@@ -117,9 +117,9 @@ int main () {
     }
 
     scanf("%u", &N);
-    for (i = 0; i < N; i++) {
+    for (i = 0; i < N; i++) { // Načítání bodů, nezajímají mě obrazce, pouze body
         scanf("%u", &K);
-        if ((IndexStack + K) > SizeStack) {
+        if ((IndexStack + K) > SizeStack) { // alokace místa na body
             stack = realloc(stack, sizeof(bod) * SizeStack + BLOCK);
             SizeStack += BLOCK;
             if (stack == NULL) {
@@ -128,11 +128,11 @@ int main () {
             }
         }
         for (j = 0; j < K; j++) {
-            scanf("%d %d", &stack[IndexStack + j].x, &stack[IndexStack + j].y);
+            scanf("%d %d", &stack[IndexStack + j].x, &stack[IndexStack + j].y); // Načítá body
         }
         IndexStack += K;
     }
-    Stack = points(stack, IndexStack);
+    Stack = points(stack, IndexStack); // Získání bodů na obalu
     printf("%.2lf\n", compute (Stack.stack, Stack.Index));
     free(stack);
     free(Stack.stack);
