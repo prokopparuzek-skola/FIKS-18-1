@@ -8,7 +8,7 @@ konvexního obalu.
 
 ### Algoritmus
 Začnu tím že si body seřadím, abych je následně mohl rozumně projít. Jelikož je budu procházet zleva, seřadím si je
-podle x. Pokud je x stejné u více bodů řadím dle y, mohu plochu "pootočit", body na obalu se tím nezmění. K řazení
+podle x. Pokud je x stejné u více bodů řadím dle y, mohu plochu ,,pootočit", body na obalu se tím nezmění. K řazení
 používám quicksort, který má průměrou složitost řazení `O(N log N)`. Jakmile mám body seřazeny, mohu si je zleva projít
 a zařazovat je do obalu, aby zůstal konvenxní, už bodle názvu, v něm musí být jen úhly pod 180°. To řeším takto.
 Rozdělím si plochu na dvě poloviny, mezi nejlevějším a nejpravějším bodem, horní a dolní. Pak přidám do každe poloviny
