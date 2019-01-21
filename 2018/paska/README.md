@@ -13,5 +13,5 @@ O(N + N log N)
 Odstraníme přičítací konstanty a vyjde nám:
 ```
 O(N log N)
-```
+``` 
 To je celková složitost algoritmu.
