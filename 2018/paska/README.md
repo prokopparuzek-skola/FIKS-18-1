@@ -1,3 +1,8 @@
+---
+header-includes:
+	\usepackage{a4wide}
+	\usepackage[czech]{babel}
+---
 # Páska
 ## Řešení
 ### Popis
